@@ -1,13 +1,10 @@
 <div class="container">
- 
-  <!--<input class="form-control mb-5" type="file" accept=".csv" class="upload" id="input" change="changeListener($event:any)">-->
-  
+   <input class="form-control mb-5" type="file" accept=".csv" class="upload" id="input" (change)="fileChanged($event)">
 
-  <input class="form-control mb-5" type="file" accept=".csv" class="upload" id="input" (change)="fileChanged($event)">
+  </div>
+<!--
 
-<br>
-
-  <table class="table table-dark">
+  <table class="table table-sm">
     <thead>
       <tr>
         <th *ngFor="let item of lines[0]; let i = index">{{item}}</th>
@@ -20,4 +17,4 @@
       </tr>
     </tbody>
   </table>
-</div>
+</div> -->
