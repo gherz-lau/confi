@@ -41,16 +41,18 @@ export class AppComponent {
               else {
                 this.archivo2 =allTextLines;
               }
-
-
         }
-        
-        
+ 
         fileReader.readAsText(this.file);
-
-       
-
+    
   }
+
+
+
+sorteo(){
+  window.alert("Se ejecutó sorteo");
+}
+
 
 }
 
