@@ -13,6 +13,14 @@ export class AppComponent {
   
   winArray = Array<{ reward: string; randomNumber: number; winner: string  }>;
 
+  elObjeto = {
+    reward: String,
+    randomNumber: Number,
+    Winner: String
+}
+
+Objeto: new elObjeto;
+
 FilePersonsLoad (e:any) {
 
   this.file = e.target.files[0]; 
@@ -51,17 +59,15 @@ FileRewardsLoad (e:any) {
           let allTextLines = [];
           //= Array<{ reward: string; randomNumber: number; winner: string  }>;
        
-          let elObjeto = {
-              reward: String,
-              randomNumber: Number,
-              Winner: String
-          }
          
+         
+          
+
           allTextLines = csv.split(/\n/); //guardas el csv en el arreglo, partiendolo cada salto de linea
           let longitud = allTextLines.length - 1; 
           allTextLines.splice(longitud, 1 );
           
-         //IMPRIMIMOS EL ARRAY EN LA CONSOLA
+          //IMPRIMIMOS EL ARRAY EN LA CONSOLA
           for(let i = 0; i < longitud; i++){
             elObjeto.reward = allTextLines[i];
             this.winArray.push(elObjeto);
