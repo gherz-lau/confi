@@ -1,152 +1,80 @@
-import { VariableBinding } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Participante } from './participantes';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
-
 export class AppComponent {
-  file:any;  //DECLARAS VARIABLE FILE TIPO ANY
-  persons = [];
-  
-  winArray = Array<{ reward: string; randomNumber: number; winner: string  }>;
+  file: any; //DECLARAS VARIABLE FILE TIPO ANY
+  participantes: Array<Participante> = [];
+  premios: Array<string> = [];
 
-  elObjeto = {
-    reward: String,
-    randomNumber: Number,
-    Winner: String
-}
+  fileChanged(e: any) {
+    //ESTA ES LA FUNCION
+    //CARGAMOS EL ARCHIVO
 
-Objeto: new elObjeto;
+    this.file = e.target.files[0];
+    let fileReader = new FileReader();
 
-FilePersonsLoad (e:any) {
+    fileReader.onload = (e) => {
+      //LO DIVIDIMOS Y GUARDAMOS EN UN ARRAY LLAMADO "ALL TEXT LINES"
+      let csv: any = fileReader.result;
+      let allTextLines = []; //DECLARAS UN ARREGLO
+      allTextLines = csv.split(/\n/); //guardas el csv en el arreglo, partiendolo cada salto de linea
 
-  this.file = e.target.files[0]; 
-  let fileReader = new FileReader(); 
- 
-  fileReader.onload = (e) => {  
-          let csv: any = fileReader.result;
-          let allTextLines = []; 
-          allTextLines = csv.split(/\n/); //guardas el csv en el arreglo, partiendolo cada salto de linea
-          let longitud = allTextLines.length - 1; 
-          allTextLines.splice(longitud, 1 );
-          
-          this.persons =allTextLines;
+      //eliminamos la ultima posicion del array, que es un salto de línea (vacío)
+      let longitud = allTextLines.length;
+      allTextLines.splice(longitud - 1, 1);
+      longitud = allTextLines.length;
 
-          //IMPRIMIMOS EL ARRAY EN LA CONSOLA
-          for(let i = 0; i < longitud; i++){
-                console.log("la", i, "posicion es", this.persons[i])   
-              }
-             
-              
-          }
-           
-          fileReader.readAsText(this.file);
-        
-} //final de FilePersonsLoad
+      for (let i = 0; i < longitud; i++) {
+        const newPlayer = new Participante();
+        newPlayer.nombre = allTextLines[i];
+        this.participantes.push(newPlayer);
+      }
+      console.log('participantes', this.participantes);
+    };
 
+    fileReader.readAsText(this.file);
+  }
+  filePremios(e: any) {
+    this.file = e.target.files[0];
+    let fileReader = new FileReader();
 
+    fileReader.onload = (e) => {
+      //LO DIVIDIMOS Y GUARDAMOS EN UN ARRAY LLAMADO "ALL TEXT LINES"
+      let csv: any = fileReader.result;
+      this.premios = csv.split(/\n/); //guardas el csv en el arreglo, partiendolo cada salto de linea
+      console.log('premios', this.premios);
+    };
 
-FileRewardsLoad (e:any) {
-
-  this.file = e.target.files[0]; 
-  let fileReader = new FileReader(); 
- 
-  fileReader.onload = (e) => {  
-          let csv: any = fileReader.result;
-          let allTextLines = [];
-          //= Array<{ reward: string; randomNumber: number; winner: string  }>;
-       
-         
-         
-          
-
-          allTextLines = csv.split(/\n/); //guardas el csv en el arreglo, partiendolo cada salto de linea
-          let longitud = allTextLines.length - 1; 
-          allTextLines.splice(longitud, 1 );
-          
-          //IMPRIMIMOS EL ARRAY EN LA CONSOLA
-          for(let i = 0; i < longitud; i++){
-            elObjeto.reward = allTextLines[i];
-            this.winArray.push(elObjeto);
-            console.log("la", i, "posicion es", allTextLines[i]);
-                                              
-          }
-
-                        
-          }
-           
-          fileReader.readAsText(this.file);
-        
-} //final de FileRewardsLoad
-
-
-
-
-
-
-
-
-
-
-
-
-
-sorteo(){
-   //window.alert("Se ejecutó sorteo");
-   window.alert("Se ejecutó sorteo");
-
-   }
-
-
-
-
-   
-
-        }
-
-/*
-
-  fileChanged(e:any) {  //ESTA ES LA FUNCION
-  //CARGAMOS EL ARCHIVO 
-    
-  this.file = e.target.files[0]; 
-  let fileReader = new FileReader(); 
-    
-    fileReader.onload = (e) => {  //LO DIVIDIMOS Y GUARDAMOS EN UN ARRAY LLAMADO "ALL TEXT LINES"
-          let csv: any = fileReader.result;
-          let allTextLines = []; //DECLARAS UN ARREGLO
-          allTextLines = csv.split(/\n/); //guardas el csv en el arreglo, partiendolo cada salto de linea
-                
-          //eliminamos la ultima posicion del array, que es un salto de línea (vacío) 
-          let longitud = allTextLines.length;
-          allTextLines.splice(longitud-1, 1 );
-          longitud = allTextLines.length;
-
-          //IMPRIMIMOS EL ARRAY EN LA CONSOLA
-          for(let i = 0; i < longitud; i++){
-                console.log("la", i, "posicion es", allTextLines[i])   
-              }
-
-              if (this.archivo1[0]== 0){
-
-                this.archivo1 =allTextLines;
-
-              } 
-              else {
-                this.archivo2 =allTextLines;
-              }
-
-              return allTextLines; 
-        }
- 
-        fileReader.readAsText(this.file);
-    
-
+    fileReader.readAsText(this.file);
   }
 
-*/
+  generar() {
+    const ganadores = this.premios.length;
+    if (this.participantes.length < ganadores) {
+      alert('estas loco esto no se puede');
+      return;
+    }
 
+    for (let i = 0; i < this.premios.length; i++) {
+      const premio = this.premios[i];
+      let winnerIndex = -1;
 
+      while (winnerIndex == -1) {
+        const index = this.getRandomArbitrary(0, this.participantes.length - 1);
+        console.log('index', index);
+        if (this.participantes[index].premio === '') {
+          winnerIndex = index;
+        }
+      }
+      this.participantes[winnerIndex].premio = premio;
+    }
+  }
+  getRandomArbitrary(min: number, max: number) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
+}
