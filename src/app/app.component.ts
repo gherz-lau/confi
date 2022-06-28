@@ -60,18 +60,12 @@ export class AppComponent {
       return;
     }
 
-    for (let i = 0; i < this.premios.length; i++) {
-      const premio = this.premios[i];
-      let winnerIndex = -1;
-
-      while (winnerIndex == -1) {
-        const index = this.getRandomArbitrary(0, this.participantes.length - 1);
-        console.log('index', index);
-        if (this.participantes[index].premio === '') {
-          winnerIndex = index;
-        }
+    while (this.premios.length > 0) {
+      const index = this.getRandomArbitrary(0, this.participantes.length - 1);
+      if (this.participantes[index].premio === '') {
+        this.participantes[index].premio = this.premios[0];
+        this.premios.shift();
       }
-      this.participantes[winnerIndex].premio = premio;
     }
   }
   getRandomArbitrary(min: number, max: number) {
